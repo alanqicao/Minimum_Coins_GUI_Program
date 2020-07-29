@@ -10,63 +10,114 @@ class Minimum_Coins_GUI_Program extends JFrame
 {
     //======================================================== constants
 
-    private static final int DOG_YEARS_PER_HUMAN_YEAR = 7;      //Note 1
-    //=============================================== instance variables
-    private JTextField _humanYearsTF = new JTextField(3);       //Note 2
-    private JTextField _dogYearsTF = new JTextField(3);
+   
+    private JTextField changeTF = new JTextField(3);    
+    private JLabel quartersLBL = new JLabel("");       
+    private JLabel dimesLBL = new JLabel("");     
+    private JLabel nickelsLBL = new JLabel("");    
+    private JLabel penniesLBL = new JLabel("");      
+    
 
     //====================================================== constructor
     public Minimum_Coins_GUI_Program()
-    {                                        //Note 3
+    {                                     
         // 1... Create/initialize components
-        JButton convertBtn = new JButton("Convert");  //Note 4
-        convertBtn.addActionListener(new ConvertBtnListener()); //Note 5
+        JButton calcBtn = new JButton("Calculate"); 
+        JButton clearBtn = new JButton("Clear");  
+        //Connect listeners to buttons
+        
+        calcBtn.addActionListener(new CalcBtnListener()); 
+        clearBtn.addActionListener(new ClearBtnListener()); 
 
-        _dogYearsTF.addActionListener(new ConvertBtnListener());
-        _humanYearsTF.setEditable(false);
+        changeTF.addActionListener(new CalcBtnListener());
+        //changeTF.setEditable(false);
 
 
-        // 2... Create content panel, set layout
-        JPanel content = new JPanel();
-        content.setLayout(new FlowLayout());
+        // 2... Create panel panel, set layout
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(6,2,2,2)); //(roll,column,roll distance, column distance)
 
-        // 3... Add the components to the content panel.
-        content.add(new JLabel("Dog Years"));
-        content.add(_dogYearsTF);              // Add input field
-        content.add(convertBtn);               // Add button
-        content.add(new JLabel("Human Years"));
-        content.add(_humanYearsTF);            // Add output field
+        // 3... Add the components to the panel panel.
+        panel.add(new JLabel("Enter Change (1-99):"));
+        panel.add(changeTF); 
+        panel.add(new JLabel("Quarters"));
+        panel.add(quartersLBL);
+        panel.add(new JLabel("Dimes"));
+        panel.add(dimesLBL);
+        panel.add(new JLabel("Nickels"));
+        panel.add(nickelsLBL);
+        panel.add(new JLabel("Pennies"));
+        panel.add(penniesLBL);
+        panel.add(calcBtn);               // Add button
+        panel.add(clearBtn);               // Add button
+        
+            
 
         // 4... Set this window's attributes, and pack it.
-        setContentPane(content);
+        setContentPane(panel);
         pack();                               // Layout components.
-        setTitle("Dog Year Converter");
+        setTitle("Minimum Coins");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);          // Center window.
     }
 
     ////////////////////////////////////////////////// ConvertBtnListener
-    class ConvertBtnListener implements ActionListener
+    class CalcBtnListener implements ActionListener
     {         //Note 6
 
         public void actionPerformed(ActionEvent e)
         {
-            //... Get the value from the dog years textfield.
-            String dyStr = _dogYearsTF.getText();                //Note 7
-            int dogYears = Integer.parseInt(dyStr);              //Note 8
+            int coins =0;
+            String changeSTR = changeTF.getText();
+            int changeINT = Integer.parseInt(changeSTR);
+            //calc all coins
+            //calc quarters
+            while(changeINT >=25)
+            {
+                changeINT = changeINT-25;
+                coins++;
+            }
+            quartersLBL.setText(""+coins);
+            coins =0;
+            //calc dimes
+            while(changeINT >=10)
+            {
+                changeINT = changeINT-10;
+                coins++;
+            }
+            dimesLBL.setText(""+coins);
+            coins = 0;
+            //calc nickels
+            if(changeINT >=5)
+            {
+                changeINT = changeINT-5;
+                coins=1;
+            }
+            nickelsLBL.setText(""+coins);
+            penniesLBL.setText(""+changeINT);
 
-            //... Convert it - each dog year is worth 7 human years.
-            int humanYears = dogYears * DOG_YEARS_PER_HUMAN_YEAR; //Note 9
+        }//acttion
+    }
+    
+       class ClearBtnListener implements ActionListener
+    {         // clear all fiels
 
-            //... Convert to string and set human yrs textfield
-            _humanYearsTF.setText("" + humanYears);              //Note 10
+        public void actionPerformed(ActionEvent e)
+        {
+            
+            changeTF.setText("");              
+            quartersLBL.setText("");              
+            nickelsLBL.setText("");             
+            dimesLBL.setText("");              
+            penniesLBL.setText("");            
+            
         }
     }
 
     //====================================================== method main
     public static void main(String[] args)
     {
-        DogYearsExample window = new DogYearsExample();
+        Minimum_Coins_GUI_Program window = new Minimum_Coins_GUI_Program();
         window.setVisible(true);
     }
 }
@@ -78,9 +129,9 @@ class Minimum_Coins_GUI_Program extends JFrame
 2. This declares and initializes a text field to be approximately 3 characters wide.
 3. The GUI constructor typically performs the following chores:
 	(1) Finish initializing components (creating, setting attributes, adding listeners, ...).
-	(2) Create a content pane and set the layout.
+	(2) Create a panel pane and set the layout.
 	(3) Add the components.
-	(4) Set frame attributes, including the content pane, and pack it to do the layout.
+	(4) Set frame attributes, including the panel pane, and pack it to do the layout.
 4. This declares and initializes a "Convert" button.
 5. This creates an association between the button and an object.
 	When the button is clicked, it will call the actionPerformed method of that object.
